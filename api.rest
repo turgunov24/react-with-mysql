@@ -1,0 +1,16 @@
+GET    https://axios-http.com/docs/api_intro
+
+
+
+
+
+HTTP/1.1
+Content-type: application/json
+{
+    "firstName": "Turg'unov",
+    "lastName": "Murodjon",
+    "email": "example@gmail.com",
+    "id": 10,
+    "password": "sample",
+    "username": "turgunov",
+}
