@@ -5,19 +5,11 @@ import axios from "axios";
 
 function CreatePage() {
   const onSubmit = (values) => {
-    // fetch("http://localhost:5173/users/create", {
-    //   method: "POST",
-    //   body: JSON.stringify(values),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // }).then((res => console.log(res)));
     axios({
-      method: "post",
-      url: "http://localhost:5173/users/create",
+      method: "POST",
+      url: "http://localhost:5000/users/create",
       data: values,
     });
-    console.log("submitted");
   };
 
   const onSubmitFailed = (error) => {

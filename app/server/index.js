@@ -4,7 +4,7 @@ import con from "../db.js";
 import usersRoute from "../routes/users.js";
 
 // defines
-const PORT = 5173;
+const PORT = 5000;
 const app = express();
 import cors from "cors";
 

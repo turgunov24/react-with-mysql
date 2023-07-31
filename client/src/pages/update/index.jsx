@@ -1,15 +1,27 @@
 import { Button, Form, Input, Space } from "antd";
 import React, { useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 function UpdatePage() {
-  const params = useParams();
+  const { id } = useParams();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5173/users/" + params.id)
+    fetch("http://localhost:5000/users/update/" + id)
       .then((res) => res.json())
-      .then((data) => console.log(data));
-  },[]);
+      .then((data) => setUser(data[0]));
+  }, []);
+
+  const handleUpdate = (values) => {
+    fetch("http://localhost:5000/users/update/" + id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+  };
 
   return (
     <Space
@@ -23,6 +35,7 @@ function UpdatePage() {
       }}
     >
       <Form
+        onFinish={handleUpdate}
         layout="vertical"
         autoComplete="off"
         style={{
@@ -34,22 +47,45 @@ function UpdatePage() {
           borderRadius: 10,
         }}
       >
-        <Form.Item required label="Username">
+        <Form.Item
+          required
+          label="Username"
+          name="username"
+          initialValue={user?.username}
+        >
           <Input />
         </Form.Item>
-        <Form.Item label="FirstName">
+        <Form.Item
+          label="FirstName"
+          name="firstName"
+          initialValue={user?.firstName}
+        >
           <Input />
         </Form.Item>
-        <Form.Item label="LastName">
+        <Form.Item
+          label="LastName"
+          name="lastName"
+          initialValue={user?.lastName}
+        >
           <Input />
         </Form.Item>
-        <Form.Item label="Email">
+        <Form.Item label="Email" name="email" initialValue={user?.email}>
           <Input />
         </Form.Item>
-        <Form.Item required label="Password">
+        <Form.Item
+          required
+          label="Password"
+          name="password"
+          initialValue={user?.password}
+        >
           <Input />
         </Form.Item>
-        <Form.Item required label="ConfirmPassword">
+        <Form.Item
+          required
+          label="ConfirmPassword"
+          name="confirmPassword"
+          initialValue={user?.confirmPassword}
+        >
           <Input />
         </Form.Item>
         <Button

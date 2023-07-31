@@ -11,7 +11,7 @@ router.get("/index", (req, res) => {
     if (err) throw new Error("db error");
     else {
       res.setHeader("Content-Type", "application/json");
-      res.json(data );
+      res.json(data);
     }
   });
 });
@@ -19,7 +19,6 @@ router.get("/index", (req, res) => {
 // create-post
 router.post("/create", (req, res) => {
   const body = req.body;
-  console.log("req body:", req.body);
   con.query(
     `INSERT INTO test (firstName, lastName, email, id, password, username) VALUES ('${body.firstName}','${body.lastName}','${body.email}','${body.id}','${body.password}','${body.username}')`,
     (err, data) => {
@@ -47,7 +46,20 @@ router.get("/update/:id", (req, res) => {
 
 // update-put
 router.put("/update/:id", (req, res) => {
-  res.send(req.params.id);
+  const body = req.body;
+
+  con.query(
+    `UPDATE test SET firstName='${body.firstName}',lastName='${body.lastName}',email='${body.email}',password='${body.password}',username='${body.username}' WHERE id=${req.params.id}`,
+    (err, data) => {
+      if (err) throw new Error("db error");
+      else {
+        res
+          .setHeader("Content-Type", "application/json")
+          .status(200)
+          .json("successfully updated!");
+      }
+    }
+  );
 });
 
 // delete
@@ -59,6 +71,16 @@ router.delete("/delete/:id", (req, res) => {
         .setHeader("Content-Type", "application/json")
         .status(200)
         .json("successfully deleted!");
+    }
+  });
+});
+
+// view-get
+router.get("/view/:id", (req, res) => {
+  con.query(`SELECT * FROM test WHERE id=${req.params.id}`, (err, data) => {
+    if (err) throw new Error("db error");
+    else {
+      res.setHeader("Content-Type", "application/json").status(200).json(data);
     }
   });
 });
