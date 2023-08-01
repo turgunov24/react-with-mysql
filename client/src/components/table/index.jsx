@@ -2,26 +2,35 @@ import React, { useState } from "react";
 import { Button, Space, Table, Modal } from "antd";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../utils/api";
 
-function TableComponent({ dataSource }) {
+function TableComponent({ dataSource, getUsers }) {
   const navigate = useNavigate();
   const [modalToggle, setModalToggle] = useState(false);
-  const [modalLoading, setModalLoading] = useState(false);
+  const [deletedUserId, setDeletedUserId] = useState(null);
 
-  const handleDelete = async (id) => {
-    await fetch("http://localhost:5000/users/delete/1");
-    await setModalToggle(false);
-    await navigate("/");
+  const handleDelete = () => {
+    api
+      .delete("http://localhost:5000/users/delete/" + deletedUserId)
+      .then(setModalToggle(false))
+      .then(() => getUsers());
   };
 
   const columns = [
+    {
+      title: "№",
+      key: "number",
+      render: (_, record, index) => {
+        return <p key={index}>{++index}</p>;
+      },
+    },
     {
       title: "Name",
       dataIndex: "firstName",
       key: "name",
     },
     {
-      title: "Name",
+      title: "Sourname",
       dataIndex: "lastName",
       key: "name",
     },
@@ -31,9 +40,14 @@ function TableComponent({ dataSource }) {
       key: "email",
     },
     {
+      title: "Username",
+      dataIndex: "username",
+      key: "email",
+    },
+    {
       title: "Action",
       key: "action",
-      render: (_, record) => {
+      render: (_, record, index) => {
         return (
           <Space size="small">
             <Button
@@ -60,7 +74,8 @@ function TableComponent({ dataSource }) {
               }}
               type="text"
               onClick={() => {
-                setModalToggle((prev) => !prev);
+                setDeletedUserId(record.id);
+                setModalToggle(true);
               }}
             >
               <DeleteOutlined />
@@ -83,6 +98,7 @@ function TableComponent({ dataSource }) {
         Do you want to delete this user ?
       </Modal>
       <Table
+        scroll={{ x: window.screenX < 100 && 100 }}
         dataSource={dataSource}
         columns={columns}
         bordered

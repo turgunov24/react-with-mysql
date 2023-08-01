@@ -1,26 +1,32 @@
-import { Button, Form, Input, Space } from "antd";
+import { Button, Form, Input, Space, Spin } from "antd";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { api } from "../../utils/api";
 
 function UpdatePage() {
   const { id } = useParams();
-  const [user, setUser] = useState(null);
+  const [form] = Form.useForm();
+  const { setFieldsValue } = form;
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/users/update/" + id)
-      .then((res) => res.json())
-      .then((data) => setUser(data[0]));
+    api.get("http://localhost:5000/users/view/" + id).then((res) => {
+      setFieldsValue({
+        username: res.data[0]?.username,
+        firstName: res.data[0]?.firstName,
+        lastName: res.data[0]?.lastName,
+        email: res.data[0]?.email,
+        password: res.data[0]?.password,
+        confirmPassword: res.data[0]?.confirmPassword,
+      });
+    });
   }, []);
 
   const handleUpdate = (values) => {
-    fetch("http://localhost:5000/users/update/" + id, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
+    api
+      .put("http://localhost:5000/users/update/" + id, values)
+      .then(navigate("/"));
   };
 
   return (
@@ -35,6 +41,7 @@ function UpdatePage() {
       }}
     >
       <Form
+        form={form}
         onFinish={handleUpdate}
         layout="vertical"
         autoComplete="off"
@@ -47,45 +54,22 @@ function UpdatePage() {
           borderRadius: 10,
         }}
       >
-        <Form.Item
-          required
-          label="Username"
-          name="username"
-          initialValue={user?.username}
-        >
+        <Form.Item required label="Username" name="username">
           <Input />
         </Form.Item>
-        <Form.Item
-          label="FirstName"
-          name="firstName"
-          initialValue={user?.firstName}
-        >
+        <Form.Item label="FirstName" name="firstName">
           <Input />
         </Form.Item>
-        <Form.Item
-          label="LastName"
-          name="lastName"
-          initialValue={user?.lastName}
-        >
+        <Form.Item label="LastName" name="lastName">
           <Input />
         </Form.Item>
-        <Form.Item label="Email" name="email" initialValue={user?.email}>
+        <Form.Item label="Email" name="email">
           <Input />
         </Form.Item>
-        <Form.Item
-          required
-          label="Password"
-          name="password"
-          initialValue={user?.password}
-        >
+        <Form.Item required label="Password" name="password">
           <Input />
         </Form.Item>
-        <Form.Item
-          required
-          label="ConfirmPassword"
-          name="confirmPassword"
-          initialValue={user?.confirmPassword}
-        >
+        <Form.Item required label="ConfirmPassword" name="confirmPassword">
           <Input />
         </Form.Item>
         <Button

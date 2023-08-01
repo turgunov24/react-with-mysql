@@ -1,16 +1,13 @@
 import { message } from "antd";
+import axios from "axios";
 
-const fetchAction = async (url, options) => {
-  try {
-    const response = await fetch(
-      url
-      // options && {
-      //   ...options,
-      // }
-    );
-  } catch (error) {
-    message.error(error.message);
-  }
-};
+export const api = axios.create({});
 
-export default fetchAction;
+api.interceptors.response.use((response) => {
+  // if (response.status === 200) {
+  //   message.success(response.statusText);
+  //   console.log("re",response.statusText)
+  // }
+
+  return response
+});

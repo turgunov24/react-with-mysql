@@ -1,15 +1,14 @@
 import React from "react";
 import { Button, Form, Input, Space } from "antd";
-// import axios from "axios/dist/node/axios.cjs";
-import axios from "axios";
+import { api } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
 function CreatePage() {
+  const navigate = useNavigate();
   const onSubmit = (values) => {
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/users/create",
-      data: values,
-    });
+    api
+      .post("http://localhost:5000/users/create", values)
+      .then((res) => navigate("/"));
   };
 
   const onSubmitFailed = (error) => {

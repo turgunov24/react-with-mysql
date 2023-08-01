@@ -1,6 +1,7 @@
 // imports
 import express from "express";
 import con from "../db.js";
+import { v4 as uuidv4 } from "uuid";
 
 // defines
 const router = express.Router();
@@ -11,7 +12,7 @@ router.get("/index", (req, res) => {
     if (err) throw new Error("db error");
     else {
       res.setHeader("Content-Type", "application/json");
-      res.json(data);
+      res.json(data).statusMessage = "sdf";
     }
   });
 });
@@ -20,7 +21,11 @@ router.get("/index", (req, res) => {
 router.post("/create", (req, res) => {
   const body = req.body;
   con.query(
-    `INSERT INTO test (firstName, lastName, email, id, password, username) VALUES ('${body.firstName}','${body.lastName}','${body.email}','${body.id}','${body.password}','${body.username}')`,
+    `INSERT INTO test (firstName, lastName, email, id, password, username) VALUES ('${
+      body.firstName
+    }','${body.lastName}','${body.email}','${uuidv4()}','${body.password}','${
+      body.username
+    }')`,
     (err, data) => {
       if (err) throw new Error("db error");
       else {
@@ -47,16 +52,13 @@ router.get("/update/:id", (req, res) => {
 // update-put
 router.put("/update/:id", (req, res) => {
   const body = req.body;
-
   con.query(
     `UPDATE test SET firstName='${body.firstName}',lastName='${body.lastName}',email='${body.email}',password='${body.password}',username='${body.username}' WHERE id=${req.params.id}`,
     (err, data) => {
       if (err) throw new Error("db error");
       else {
-        res
-          .setHeader("Content-Type", "application/json")
-          .status(200)
-          .json("successfully updated!");
+        res.setHeader("Content-Type", "application/json").status(200);
+        res.statusMessage = "successfully updated!";
       }
     }
   );
