@@ -49,7 +49,7 @@ function CreatePage() {
         <Form.Item name="lastName" label="LastName">
           <Input />
         </Form.Item>
-        <Form.Item name="Email" label="Email">
+        <Form.Item name="email" label="Email">
           <Input />
         </Form.Item>
         <Form.Item name="Password" required label="Password">

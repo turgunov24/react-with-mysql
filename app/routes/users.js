@@ -20,6 +20,7 @@ router.get("/index", (req, res) => {
 // create-post
 router.post("/create", (req, res) => {
   const body = req.body;
+  console.log("body", body);
   con.query(
     `INSERT INTO test (firstName, lastName, email, id, password, username) VALUES ('${
       body.firstName
